@@ -64,7 +64,6 @@ function handleImgClick(event) {
     `
     <div class="modal">
       <img
-        class="gallery-image"
         width="1280" 
         height="auto"
         src="${original}"
