@@ -48,6 +48,45 @@ const images = [
 
 const container = document.querySelector('.gallery');
 container.innerHTML = createMarkup(images);
+container.addEventListener('click', handleImgClick);
+
+function handleImgClick(event) {
+  event.preventDefault();
+  if (event.target === event.currentTarget) {
+    return;
+  }
+
+  const liEl = event.target.closest('.gallery-item');
+  const original = event.target.dataset.source;
+  const description = event.target.alt;
+
+  const instance = basicLightbox.create(
+    `
+    <div class="modal">
+      <img
+        class="gallery-image"
+        width="1280" 
+        height="auto"
+        src="${original}"
+        alt="${description}"
+      />
+    </div>`,
+    {
+      onShow: () => {
+        document.addEventListener('keydown', modalClose);
+      },
+      onClose: () => {
+        document.removeEventListener('keydown', modalClose);
+      },
+    }
+  );
+  instance.show();
+
+  function modalClose(event) {
+    if (event.code !== 'Escape') return;
+    instance.close();
+  }
+}
 
 function createMarkup(arr) {
   return arr
@@ -57,6 +96,8 @@ function createMarkup(arr) {
       <a class="gallery-link" href="${original}" download rel="noopener noreferrer">
         <img
           class="gallery-image"
+          width="360"
+          height="auto"
           src="${preview}"
           data-source="${original}"
           alt="${description}"
